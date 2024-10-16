@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Product Cart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2b2f33;
+            color: #eaeaea;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f39c12;
+            text-transform: uppercase;
+            font-size: 2.5rem;
+            animation: fadeInDown 0.8s ease;
+        }
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .controls select, .controls input {
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f39c12;
+            color: #2b2f33;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+        .controls button {
+            padding: 10px 15px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+        .controls button:hover {
+            background-color: #2ecc71;
+            transform: scale(1.1);
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .product-card {
+            width: 22%;
+            background-color: #34495e;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .product-card img:hover {
+            transform: scale(1.05);
+        }
+        .product-card h3 {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #f39c12;
+            transition: color 0.2s ease;
+        }
+        .product-card p {
+            font-size: 16px;
+            color: #bdc3c7;
+        }
+        .add-to-cart {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .add-to-cart:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+        .cart-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #2c3e50;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease;
+        }
+        .cart-section h2 {
+            color: #f39c12;
+        }
+        .cart-section ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        .cart-section ul li {
+            padding: 15px;
+            border-bottom: 1px solid #7f8c8d;
+            font-size: 16px;
+        }
+        .cart-section ul li span {
+            float: right;
+            color: #f39c12;
+        }
+        .cart-section h3 {
+            margin-top: 20px;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .clear-cart, .update-cart, .delete-cart {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .clear-cart:hover, .update-cart:hover, .delete-cart:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Product Cart</h1>
+
+        <!-- Controls Section -->
+        <div class="controls">
+            <label for="limit">Limit Results:</label>
+            <input type="number" id="limit" min="1" value="5" />
+            
+            <label for="sort">Sort by:</label>
+            <select id="sort">
+                <option value="price">Price</option>
+                <option value="name">Name</option>
+            </select>
+
+            <button onclick="loadProducts()">Load Products</button>
+        </div>
+
+        <!-- Products Section -->
+        <div class="products" id="products"></div>
+
+        <!-- Cart Section -->
+        <div class="cart-section" id="cart">
+            <h2>Your Cart</h2>
+            <ul id="cartItems"></ul>
+            <h3>Total: $<span id="cartTotal">0.00</span></h3>
+            <button class="clear-cart" onclick="clearCart()">Clear Cart</button>
+            <button class="update-cart" onclick="updateCart()">Update Cart</button>
+            <button class="delete-cart" onclick="deleteCart()">Delete Cart</button>
+        </div>
+    </div>
+    <script>
+        let cart = [];
+        let cartId = null;
+    
+        // Load products with limit and sorting
+        function loadProducts() {
+            const limit = document.getElementById('limit').value;
+            const sort = document.getElementById('sort').value;
+            const xhr = new XMLHttpRequest();
+    
+            let url = `https://fakestoreapi.com/products?limit=${limit}`;
+            if (sort === 'price') {
+                url += '&sort=asc';
+            }
+    
+            xhr.open('GET', url, true);
+            xhr.onload = function () {
+                if (this.status === 200) {
+                    const products = JSON.parse(this.responseText);
+                    let output = '';
+                    products.forEach(function (product) {
+                        output += `
+                            <div class="product-card">
+                                <img src="${product.image}" alt="${product.title}">
+                                <h3>${product.title}</h3>
+                                <p>$${product.price.toFixed(2)}</p>
+                                <button class="add-to-cart" onclick="addToCart(${product.id}, '${product.title}', ${product.price})">Add to Cart</button>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('products').innerHTML = output;
+                }
+            };
+            xhr.send();
+        }
+    
+        // Add to Cart
+        function addToCart(id, title, price) {
+            // Check if item is already in the cart
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+    
+            if (existingItemIndex > -1) {
+                // If it exists, increase the quantity
+                cart[existingItemIndex].quantity++;
+            } else {
+                // If it doesn't exist, add it to the cart with quantity 1
+                const product = { id, title, price, quantity: 1 };
+                cart.push(product);
+            }
+    
+            updateCartDisplay();
+            alert(`${title} has been added to the cart!`);
+        }
+    
+        // Update Cart Display
+        function updateCartDisplay() {
+            let cartItems = '';
+            let total = 0;
+    
+            cart.forEach(function (item) {
+                cartItems += `<li>${item.title} (${item.quantity}) <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                <button onclick="removeFromCart(${item.id})">Remove</button></li>`;
+                total += item.price * item.quantity;
+            });
+    
+            document.getElementById('cartItems').innerHTML = cartItems;
+            document.getElementById('cartTotal').innerText = total.toFixed(2);
+        }
+    
+        // Remove item from cart
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartDisplay();
+            alert('Item has been removed from the cart!');
+        }
+    
+        // Clear Cart
+        function clearCart() {
+            cart = [];
+            updateCartDisplay();
+            alert('Cart has been cleared!');
+        }
+    
+        // Update Cart (Optional, placeholder for additional functionality)
+        function updateCart() {
+            if (!cartId) {
+                alert('No cart found to update.');
+            } else {
+                // Logic to update the cart using cartId can be implemented here
+            }
+        }
+    
+        // Delete Cart (Clear cart in this case)
+        function deleteCart() {
+            if (!cartId) {
+                alert('No cart found to delete.');
+            } else {
+                // Logic to delete cart using cartId can be implemented here
+            }
+            clearCart();
+        }
+    </script>
+    
+</body>
+</html>
